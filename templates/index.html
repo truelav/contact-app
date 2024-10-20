@@ -4,8 +4,38 @@
 
     <form action="/contacts" method="get" class="tool-bar">
         <label for="search">Search Term</label>
-        <input id="search" type="search" name="q" value="{{ request.args.get("q") or '' }}" />
+        <input id="search" type="search" name="q" value="{{ request.args.get('q') or '' }}" />
         <input type="submit" value="search" />
     </form>
+
+    <p>
+        <a href="/contacts/new">Add Contact</a>
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>First</th>
+            <th>Last</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>{{contact.first}}</td>
+                    <td>{{contact.last}}</td>
+                    <td>{{contact.phone}}</td>
+                    <td>{{contact.email}}</td>
+                    <td>
+                        <a href="">Edit</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
