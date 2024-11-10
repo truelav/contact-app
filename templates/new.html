@@ -8,7 +8,14 @@
         <div class="table rows">
             <p>
                 <label for="email">Email</label>
-                <input name="email" id="email" type="text" placeholder="Email" value="{{ contact.email or '' }}">
+                <input 
+                    name="email" 
+                    id="email" 
+                    type="text" 
+                    placeholder="Email" 
+                    hx-get="/contacts{{ contact.id }}/email"
+                    hx-target="next .error"
+                    value="{{ contact.email or '' }}">
                 <span class="error">{{ contact.errors['email'] }}</span>
             </p>
             <p>
