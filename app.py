@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, render_template, flash, jsonify, send_file
-from contacts_model import Contact
+from contacts_model import Contact, Archiver
 import time
 
 Contact.load_db()
@@ -21,7 +21,7 @@ def contacts():
     else:
         contacts_set = Contact.all()
 
-    return render_template("index.html", contacts=contacts_set, page=page)
+    return render_template("index.html", contacts=contacts_set, page=page, archiver=Archiver.get())
 
 @app.route("/contacts/count")
 def contacts_count():
@@ -62,3 +62,28 @@ def contacts_delete(contact_id=0):
     contact = Contact.find(contact_id)
     contact.delete()
     return redirect("/contacts", 303)   
+
+@app.route("/contacts/archive", methods=["POST"])
+def start_archive():
+    archiver = Archiver.get()
+    archiver.run()
+    return render_template("archive_ui.html", archiver=archiver)
+
+
+@app.route("/contacts/archive", methods=["GET"])
+def archive_status():
+    archiver = Archiver.get()
+    return render_template("archive_ui.html", archiver=archiver)
+
+
+@app.route("/contacts/archive/file", methods=["GET"])
+def archive_content():
+    archiver = Archiver.get()
+    return send_file(archiver.archive_file(), "archive.json", as_attachment=True)
+
+
+@app.route("/contacts/archive", methods=["DELETE"])
+def reset_archive():
+    archiver = Archiver.get()
+    archiver.reset()
+    return render_template("archive_ui.html", archiver=archiver)
